@@ -24,6 +24,7 @@ const mid = (r: [number, number]) => Math.round(((r[0] + r[1]) / 2) * 2) / 2;
 
 export default function Calculator() {
   const [breedName, setBreedName] = useState("");
+  const [crossName, setCrossName] = useState("");
   const [sex, setSex] = useState<Sex>("male");
   const [kg, setKg] = useState(12);
   const [profile, setProfile] = useState<ProfileKey>("neutered");
@@ -32,13 +33,31 @@ export default function Calculator() {
   const [meals, setMeals] = useState(2);
 
   const breed = breeds.find((b) => b.name === breedName);
-  const range = breed ? breed[sex] : null;
+  const cross = breed ? breeds.find((b) => b.name === crossName && b.name !== breedName) : undefined;
 
-  function pickBreed(name: string, s: Sex) {
+  // One breed: that breed's range. Two breeds: the span covering both parents,
+  // because a cross can take after either. The starting weight is the average
+  // of the two midpoints. This is a rough guide, not a sourced figure.
+  function rangeFor(a: typeof breed, b: typeof breed, s: Sex): [number, number] | null {
+    if (!a) return null;
+    if (!b) return a[s];
+    return [Math.min(a[s][0], b[s][0]), Math.max(a[s][1], b[s][1])];
+  }
+  function startFor(a: typeof breed, b: typeof breed, s: Sex) {
+    if (!a) return null;
+    if (!b) return mid(a[s]);
+    return Math.round(((mid(a[s]) + mid(b[s])) / 2) * 2) / 2;
+  }
+  const range = rangeFor(breed, cross, sex);
+
+  function pick(name: string, crossWith: string, s: Sex) {
+    const a = breeds.find((x) => x.name === name);
+    const b = a ? breeds.find((x) => x.name === crossWith && x.name !== name) : undefined;
     setBreedName(name);
+    setCrossName(a ? crossWith : "");
     setSex(s);
-    const b = breeds.find((x) => x.name === name);
-    if (b) setKg(mid(b[s]));
+    const start = startFor(a, b, s);
+    if (start !== null) setKg(start);
   }
 
   const outside = range ? kg < range[0] * 0.9 || kg > range[1] * 1.1 : false;
@@ -64,9 +83,17 @@ export default function Calculator() {
       <div className="calc-cols">
         <div className="field">
           <label htmlFor="breed">Breed</label>
-          <select id="breed" value={breedName} onChange={(e) => pickBreed(e.target.value, sex)}>
-            <option value="">Crossbreed or not listed</option>
+          <select id="breed" value={breedName} onChange={(e) => pick(e.target.value, crossName, sex)}>
+            <option value="">Not listed</option>
             {breeds.map((b) => <option key={b.name} value={b.name}>{b.name}</option>)}
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor="cross">Crossed with <span className="fineprint">(optional)</span></label>
+          <select id="cross" value={cross ? crossName : ""} disabled={!breed}
+            onChange={(e) => pick(breedName, e.target.value, sex)}>
+            <option value="">Not a cross</option>
+            {breeds.filter((b) => b.name !== breedName).map((b) => <option key={b.name} value={b.name}>{b.name}</option>)}
           </select>
         </div>
         <fieldset className="field">
@@ -74,7 +101,7 @@ export default function Calculator() {
           <div className="seg">
             {(["male", "female"] as Sex[]).map((s) => (
               <label key={s} className={sex === s ? "seg-on" : ""}>
-                <input type="radio" name="sex" checked={sex === s} onChange={() => pickBreed(breedName, s)} />
+                <input type="radio" name="sex" checked={sex === s} onChange={() => pick(breedName, crossName, s)} />
                 {s === "male" ? "Male" : "Female"}
               </label>
             ))}
@@ -82,14 +109,21 @@ export default function Calculator() {
         </fieldset>
       </div>
 
-      {range ? (
+      {range && cross ? (
+        <p className="note calc-note">
+          A {sex} {breed!.name} × {cross.name} cross could weigh anywhere from{" "}
+          <strong>{kgText(range)}</strong> as an adult, depending on which parent they take after.
+          We've started you at {kg} kg, halfway between the two breeds. That is a rough guide: if
+          you know what your dog should weigh, enter it.
+        </p>
+      ) : range ? (
         <p className="note calc-note">
           A typical adult {sex} {breed!.name} weighs <strong>{kgText(range)}</strong>. We've set the
           weight to match. Change it if your vet has given you a different target.
         </p>
       ) : (
         <p className="fineprint">
-          For crossbreeds and breeds not on the list, enter the ideal weight your vet has given you.
+          If your dog's breed isn't listed, enter the ideal weight your vet has given you.
         </p>
       )}
 
@@ -107,7 +141,7 @@ export default function Calculator() {
         </div>
         {outside ? (
           <p className="calc-warn">
-            That's outside the typical range for this breed and sex. If it's your dog's current
+            That's outside the typical range for {cross ? "these breeds" : "this breed"} and sex. If it's your dog's current
             weight, ask your vet what their target should be and feed for that.
           </p>
         ) : null}

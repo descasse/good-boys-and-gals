@@ -35,6 +35,11 @@ export default function Page() {
           is the number most owners don't have. So the breed sets the weight, and the weight sets
           the calories.
         </p>
+        <p>
+          For a cross of two listed breeds, pick both. The calculator shows the full span from the
+          lighter parent to the heavier one and starts halfway between. Crosses vary a lot, so
+          treat that as a first guess and go by your dog's shape and your vet's advice.
+        </p>
 
         <h2>How it works</h2>
         <p>
