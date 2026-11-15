@@ -1,4 +1,4 @@
-# Good Boys & Gals
+# The Dog Index
 
 UK dog wellbeing site: behaviour guides, free tools, affiliate kit slots and email capture. Next.js (App Router), no database.
 

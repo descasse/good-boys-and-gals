@@ -1,6 +1,6 @@
 export const site = {
-  name: "Good Boys & Gals",
-  tagline: "Practical help for dogs who find life a bit much",
+  name: "The Dog Index",
+  tagline: "What's safe, what it costs and what helps: every answer sourced",
   description:
     "UK dog wellbeing: plain-English behaviour guides, free tools and carefully chosen kit, with every fact linked to its source.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
