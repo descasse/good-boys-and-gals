@@ -24,6 +24,11 @@ export default function Page() {
         homemade diets are extremely difficult to get right.
       </p>
 
+      <p>
+        <Link href="/guides/how-to-choose-dog-food">How to choose a dog food</Link> covers the four
+        checks to make and how to read the label.
+      </p>
+
       <h2>How much</h2>
       <p>
         Start from your dog's ideal weight, not their current one.{" "}

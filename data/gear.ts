@@ -61,6 +61,26 @@ export const gear: Record<string, GearSlot> = {
     name: "Treat pouch and small training treats",
     use: "Rewards have to arrive within a second or two to mean anything.",
   },
+  yumove: {
+    id: "yumove",
+    name: "YuMOVE",
+    use: "A UK supplement brand. Its ranges cover joints, calming, skin and coat, digestion and dental care.",
+  },
+  poochAndMutt: {
+    id: "poochAndMutt",
+    name: "Pooch & Mutt",
+    use: "A UK brand of health-focused dog foods, treats and supplements.",
+  },
+  butternutBox: {
+    id: "butternutBox",
+    name: "Butternut Box",
+    use: "A UK subscription that delivers freshly prepared dog food.",
+  },
+  tails: {
+    id: "tails",
+    name: "tails.com",
+    use: "A UK subscription that makes a tailored recipe for each dog.",
+  },
   settleMat: {
     id: "settleMat",
     name: "Settle mat or blanket",

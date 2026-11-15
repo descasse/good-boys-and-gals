@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { hubs } from "@/data/hubs";
 import { site, tools } from "@/data/site";
+import { guides } from "@/data/guides";
 import EmailCapture from "@/components/EmailCapture";
 
 export default function Home() {
@@ -39,6 +40,21 @@ export default function Home() {
               <Link className="card" href={t.href}>
                 <h3>{t.title}</h3>
                 <p>{t.blurb}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="wrap section" aria-labelledby="guides-h">
+        <h2 id="guides-h">Buying guides</h2>
+        <ul className="card-grid">
+          {guides.map((g) => (
+            <li key={g.slug}>
+              <Link className="card" href={`/guides/${g.slug}`}>
+                <span className="card-kicker">{g.kicker}</span>
+                <h3>{g.title}</h3>
+                <p>{g.summary}</p>
               </Link>
             </li>
           ))}
