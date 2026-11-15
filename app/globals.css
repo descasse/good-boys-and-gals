@@ -153,3 +153,8 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .chip-list a:hover { border-color: var(--brand); color: var(--brand); }
 .article h3 .badge { vertical-align: middle; margin-right: 6px; }
 .card-kicker a { color: inherit; text-decoration: none; }
+
+/* Social kit */
+.kit-grid { list-style: none; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.kit-grid li { margin: 0; display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; }
+.kit-grid img { width: 100%; height: auto; border-radius: 10px; display: block; }
