@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { breeds } from "@/data/breeds";
+import { breeds, kcUrl, type Breed } from "@/data/breeds";
+import { sources } from "@/data/sources";
 
 // RER = 70 x (kg ^ 0.75). Daily need = RER x a factor range.
 // Factor ranges are the AAHA ones reported by the source on the page.
@@ -21,6 +22,9 @@ export function rer(kg: number) {
 const n = (v: number) => Math.round(v).toLocaleString("en-GB");
 const kgText = (r: [number, number]) => (r[0] === r[1] ? `${r[0]} kg` : `${r[0]} to ${r[1]} kg`);
 const mid = (r: [number, number]) => Math.round(((r[0] + r[1]) / 2) * 2) / 2;
+// A standard that only gives a maximum starts at that maximum.
+const startOf = (b: Breed, s: Sex) => (b.ceiling ? b[s][1] : mid(b[s]));
+const recordedFor = (b: Breed, s: Sex) => b.recorded?.[s] ?? b.recorded?.all;
 
 export default function Calculator() {
   const [breedName, setBreedName] = useState("");
@@ -45,8 +49,8 @@ export default function Calculator() {
   }
   function startFor(a: typeof breed, b: typeof breed, s: Sex) {
     if (!a) return null;
-    if (!b) return mid(a[s]);
-    return Math.round(((mid(a[s]) + mid(b[s])) / 2) * 2) / 2;
+    if (!b) return startOf(a, s);
+    return Math.round(((startOf(a, s) + startOf(b, s)) / 2) * 2) / 2;
   }
   const range = rangeFor(breed, cross, sex);
 
@@ -60,7 +64,19 @@ export default function Calculator() {
     if (start !== null) setKg(start);
   }
 
-  const outside = range ? kg < range[0] * 0.9 || kg > range[1] * 1.1 : false;
+  // Vet-record averages are not limits, so they never trigger the warning.
+  // A maximum-only standard only warns above the maximum.
+  const parents = [breed, cross].filter(Boolean) as Breed[];
+  const averagesOnly = parents.some((b) => b.basis === "vetcompass");
+  const noFloor = parents.some((b) => b.ceiling);
+  const outside = range && !averagesOnly
+    ? (!noFloor && kg < range[0] * 0.9) || kg > range[1] * 1.1
+    : false;
+  const rec = breed && !cross ? recordedFor(breed, sex) : undefined;
+  const recSource = breed?.recorded ? sources[breed.recorded.sourceId] : undefined;
+  const recLink = recSource ? (
+    <a href={recSource.url} rel="noopener noreferrer" target="_blank">Royal Veterinary College study</a>
+  ) : null;
 
   const p = PROFILES[profile];
   const base = rer(kg);
@@ -116,10 +132,26 @@ export default function Calculator() {
           We've started you at {kg} kg, halfway between the two breeds. That is a rough guide: if
           you know what your dog should weigh, enter it.
         </p>
+      ) : range && breed!.basis === "kc" ? (
+        <p className="note calc-note">
+          The{" "}
+          <a href={kcUrl(breed!.kc!)} rel="noopener noreferrer" target="_blank">Royal Kennel Club breed standard</a>{" "}
+          puts an adult {sex} {breed!.name} at{" "}
+          <strong>{breed!.ceiling ? `up to ${range[1]} kg` : kgText(range)}</strong>. We've set the weight to match.
+          {rec ? <> Dogs of this breed seen by UK vets average {rec} kg ({recLink}), a figure that includes overweight dogs.</> : null}
+          {" "}Change it if your vet has given you a different target.
+        </p>
+      ) : range && breed!.basis === "vetcompass" ? (
+        <p className="note calc-note">
+          The breed standard gives no weight for a {breed!.name}. UK vet records put the average adult{" "}
+          {breed!.recorded?.[sex] ? `${sex} ` : ""}at <strong>{rec} kg</strong> ({recLink}). That is an average of real
+          dogs, some of them overweight, so it is not a target. If your vet has given you a weight, use that.
+        </p>
       ) : range ? (
         <p className="note calc-note">
-          A typical adult {sex} {breed!.name} weighs <strong>{kgText(range)}</strong>. We've set the
-          weight to match. Change it if your vet has given you a different target.
+          A typical adult {sex} {breed!.name} weighs <strong>{kgText(range)}</strong>, according to a vet-group
+          chart. Neither the Kennel Club standard nor a Royal Veterinary College study gives a weight for this
+          breed. Change it if your vet has given you a different target.
         </p>
       ) : (
         <p className="fineprint">

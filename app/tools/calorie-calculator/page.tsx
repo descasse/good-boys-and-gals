@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Calculator from "./Calculator";
 import SourceList from "@/components/SourceList";
+import { breedSourceIds } from "@/data/breeds";
 
 export const metadata: Metadata = {
   title: "Dog calorie and feeding calculator",
   description:
-    "Choose from 65 breeds to get a typical adult weight, daily calories and grams of your own food per meal, with treats taken off.",
+    "Choose from 88 breeds, with weights from Royal Kennel Club standards and Royal Veterinary College research, to get daily calories and grams of your own food per meal.",
   alternates: { canonical: "/tools/calorie-calculator" },
 };
 
@@ -41,6 +42,26 @@ export default function Page() {
           treat that as a first guess and go by your dog's shape and your vet's advice.
         </p>
 
+        <h2>Where the breed weights come from</h2>
+        <p>
+          Three places, and the calculator tells you which one it used for your breed.
+        </p>
+        <ul>
+          <li>
+            <strong>The Royal Kennel Club breed standard</strong>, for the 50 listed breeds whose standard states a
+            weight. A standard describes the show ideal, so pet dogs often weigh more.
+          </li>
+          <li>
+            <strong>Royal Veterinary College VetCompass studies</strong>, which report the average adult weight
+            recorded by UK vets. We use these for breeds whose standard gives no weight, such as the Labrador
+            and German Shepherd, and show them alongside the standard where both exist. These are averages of
+            real dogs, some of them overweight, so they are not targets.
+          </li>
+          <li>
+            <strong>A vet-group chart</strong>, for breeds where neither of the first two publishes a weight.
+          </li>
+        </ul>
+
         <h2>How it works</h2>
         <p>
           Vets start from a dog's resting energy requirement: 70 × body weight in kilograms to the
@@ -59,7 +80,7 @@ export default function Page() {
           <Link href="/safe-for-dogs">which human foods are safe</Link>.
         </p>
       </section>
-      <SourceList ids={["vetstreetCalories", "phcWeights"]} />
+      <SourceList ids={["vetstreetCalories", ...breedSourceIds]} />
     </div>
   );
 }
