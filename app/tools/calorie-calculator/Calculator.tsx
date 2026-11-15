@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { breeds } from "@/data/breeds";
 
 // RER = 70 x (kg ^ 0.75). Daily need = RER x a factor range.
 // Factor ranges are the AAHA ones reported by the source on the page.
@@ -11,30 +12,47 @@ const PROFILES = {
 } as const;
 
 type ProfileKey = keyof typeof PROFILES;
+type Sex = "male" | "female";
 
 export function rer(kg: number) {
   return 70 * Math.pow(kg, 0.75);
 }
 
 const n = (v: number) => Math.round(v).toLocaleString("en-GB");
+const kgText = (r: [number, number]) => (r[0] === r[1] ? `${r[0]} kg` : `${r[0]} to ${r[1]} kg`);
+const mid = (r: [number, number]) => Math.round(((r[0] + r[1]) / 2) * 2) / 2;
 
 export default function Calculator() {
+  const [breedName, setBreedName] = useState("");
+  const [sex, setSex] = useState<Sex>("male");
   const [kg, setKg] = useState(12);
   const [profile, setProfile] = useState<ProfileKey>("neutered");
   const [density, setDensity] = useState("");
   const [treats, setTreats] = useState("");
   const [meals, setMeals] = useState(2);
 
+  const breed = breeds.find((b) => b.name === breedName);
+  const range = breed ? breed[sex] : null;
+
+  function pickBreed(name: string, s: Sex) {
+    setBreedName(name);
+    setSex(s);
+    const b = breeds.find((x) => x.name === name);
+    if (b) setKg(mid(b[s]));
+  }
+
+  const outside = range ? kg < range[0] * 0.9 || kg > range[1] * 1.1 : false;
+
   const p = PROFILES[profile];
   const base = rer(kg);
   const lo = base * p.lo;
   const hi = base * p.hi;
-  const mid = (lo + hi) / 2;
+  const midKcal = (lo + hi) / 2;
 
   const t = Math.max(0, parseFloat(treats) || 0);
   const foodLo = Math.max(0, lo - t);
   const foodHi = Math.max(0, hi - t);
-  const treatShare = mid > 0 ? Math.round((t / mid) * 100) : 0;
+  const treatShare = midKcal > 0 ? Math.round((t / midKcal) * 100) : 0;
 
   const d = parseFloat(density);
   const hasDensity = Number.isFinite(d) && d >= 50 && d <= 700;
@@ -43,9 +61,41 @@ export default function Calculator() {
 
   return (
     <div className="tool calc">
+      <div className="calc-cols">
+        <div className="field">
+          <label htmlFor="breed">Breed</label>
+          <select id="breed" value={breedName} onChange={(e) => pickBreed(e.target.value, sex)}>
+            <option value="">Crossbreed or not listed</option>
+            {breeds.map((b) => <option key={b.name} value={b.name}>{b.name}</option>)}
+          </select>
+        </div>
+        <fieldset className="field">
+          <legend>Sex</legend>
+          <div className="seg">
+            {(["male", "female"] as Sex[]).map((s) => (
+              <label key={s} className={sex === s ? "seg-on" : ""}>
+                <input type="radio" name="sex" checked={sex === s} onChange={() => pickBreed(breedName, s)} />
+                {s === "male" ? "Male" : "Female"}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+
+      {range ? (
+        <p className="note calc-note">
+          A typical adult {sex} {breed!.name} weighs <strong>{kgText(range)}</strong>. We've set the
+          weight to match. Change it if your vet has given you a different target.
+        </p>
+      ) : (
+        <p className="fineprint">
+          For crossbreeds and breeds not on the list, enter the ideal weight your vet has given you.
+        </p>
+      )}
+
       <div className="field">
-        <label htmlFor="kg">Your dog's ideal weight: <strong>{kg} kg</strong></label>
-        <input id="kg" type="range" min={1} max={80} step={0.5} value={kg}
+        <label htmlFor="kg">Ideal weight: <strong>{kg} kg</strong></label>
+        <input id="kg" type="range" min={1} max={90} step={0.5} value={Math.min(kg, 90)}
           onChange={(e) => setKg(parseFloat(e.target.value))} />
         <div className="calc-row">
           <input aria-label="Ideal weight in kilograms" type="number" inputMode="decimal" min={1} max={100} step={0.1}
@@ -53,8 +103,14 @@ export default function Calculator() {
               const v = parseFloat(e.target.value);
               if (Number.isFinite(v)) setKg(Math.min(100, Math.max(1, v)));
             }} />
-          <span className="fineprint">Use the weight your dog should be, which may not be what they weigh today.</span>
+          <span className="fineprint">The weight your dog should be, which may not be what they weigh today.</span>
         </div>
+        {outside ? (
+          <p className="calc-warn">
+            That's outside the typical range for this breed and sex. If it's your dog's current
+            weight, ask your vet what their target should be and feed for that.
+          </p>
+        ) : null}
       </div>
 
       <fieldset className="field">

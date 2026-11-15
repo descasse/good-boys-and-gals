@@ -15,7 +15,7 @@ export const tools = [
   {
     href: "/tools/calorie-calculator",
     title: "Calorie calculator",
-    blurb: "A daily calorie range for a healthy adult dog, and what that is in grams of your food.",
+    blurb: "Pick a breed, get daily calories and grams of your own food per meal.",
   },
   {
     href: "/tools/cost-estimator",

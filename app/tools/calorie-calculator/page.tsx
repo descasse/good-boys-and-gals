@@ -6,7 +6,7 @@ import SourceList from "@/components/SourceList";
 export const metadata: Metadata = {
   title: "Dog calorie and feeding calculator",
   description:
-    "Work out how many calories your dog needs a day, then turn it into grams of your own food per meal, with treats taken off.",
+    "Choose from 65 breeds to get a typical adult weight, daily calories and grams of your own food per meal, with treats taken off.",
   alternates: { canonical: "/tools/calorie-calculator" },
 };
 
@@ -15,8 +15,8 @@ export default function Page() {
     <div className="wrap article">
       <h1>Dog calorie and feeding calculator</h1>
       <p className="lede">
-        How many calories your dog needs a day, and what that is in grams of your own food, with
-        treats taken off.
+        Pick your dog's breed to start from a typical adult weight, then see daily calories and
+        grams of your own food per meal, with treats taken off.
       </p>
       <Calculator />
 
@@ -27,6 +27,14 @@ export default function Page() {
           <li>Then look at your dog's shape. If they're gaining, move towards the lower end; if they're losing, the higher end.</li>
           <li>Count everything: treats, chews and anything from your plate all come out of the same total.</li>
         </ul>
+
+        <h2>Why breed matters, and why it doesn't</h2>
+        <p>
+          Calorie needs follow body weight, not breed: a 30kg Labrador and a 30kg crossbreed need
+          about the same. What breed tells you is roughly what a healthy adult should weigh, which
+          is the number most owners don't have. So the breed sets the weight, and the weight sets
+          the calories.
+        </p>
 
         <h2>How it works</h2>
         <p>
@@ -46,7 +54,7 @@ export default function Page() {
           <Link href="/safe-for-dogs">which human foods are safe</Link>.
         </p>
       </section>
-      <SourceList ids={["vetstreetCalories"]} />
+      <SourceList ids={["vetstreetCalories", "phcWeights"]} />
     </div>
   );
 }

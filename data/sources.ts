@@ -133,6 +133,13 @@ export const sources: Record<string, Source> = {
     url: "https://www.ukpetfood.org/static/f7a4be31-2da2-427e-9fe09cfe3d615aa3/UKPetFoodFS31Feeding-Your-Pet-on-a-Budget-1.pdf",
     retrieved: "2026-11-15",
   },
+  phcWeights: {
+    id: "phcWeights",
+    publisher: "Pet Health Club (vet reviewed)",
+    title: "How heavy should my dog be?",
+    url: "https://www.pethealthclub.com/pet-advice/how-heavy-should-my-dog-be",
+    retrieved: "2026-11-15",
+  },
   pdsaDogCost: {
     id: "pdsaDogCost",
     publisher: "PDSA",

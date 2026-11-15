@@ -177,3 +177,6 @@ input[type="range"] { width: 100%; accent-color: var(--brand); }
 .seg-on { background: var(--brand); color: var(--brand-ink); }
 .seg label:focus-within { outline: 3px solid var(--accent); outline-offset: -3px; }
 .calc .result + .calc-sub { margin-top: 28px; }
+select { font: inherit; padding: 12px 14px; border: 1px solid #b9ad9a; border-radius: 10px; background: var(--surface); color: var(--ink); width: 100%; }
+.calc-note { margin: 0 0 20px; }
+.calc-warn { background: var(--amber-bg); color: var(--amber-ink); border-radius: 10px; padding: 10px 14px; margin: 10px 0 0; font-size: 0.95rem; }
