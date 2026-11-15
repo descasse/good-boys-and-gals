@@ -22,7 +22,7 @@ Import the repo in Vercel and set two environment variables:
 | File | What it holds |
 |---|---|
 | `data/hubs.ts` | The four behaviour guides. Add a guide by adding an object. |
-| `data/foods.ts` | Poisonous/hazardous foods. Every entry needs a `sourceId`. |
+| `data/safety.ts` | Foods and plants for "Is it safe for my dog?". One page per item; every item needs a source. |
 | `data/costs.ts` | PDSA cost figures (2024). |
 | `data/gear.ts` | Affiliate slots. Add `url` and `merchant` to turn a slot into a link. |
 | `data/sources.ts` | Every source, with URL and date last checked. |

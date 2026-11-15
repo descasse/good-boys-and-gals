@@ -8,9 +8,9 @@ export const site = {
 
 export const tools = [
   {
-    href: "/tools/can-my-dog-eat",
-    title: "Can my dog eat this?",
-    blurb: "Search foods that are poisonous or hazardous to dogs.",
+    href: "/safe-for-dogs",
+    title: "Is it safe for my dog?",
+    blurb: "Search foods and plants: what dogs can eat, what to avoid, and why.",
   },
   {
     href: "/tools/calorie-calculator",

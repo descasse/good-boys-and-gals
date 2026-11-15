@@ -24,6 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {hubs.map((h) => (
                   <li key={h.slug}><Link href={`/behaviour/${h.slug}`}>{h.short}</Link></li>
                 ))}
+                <li><Link href="/safe-for-dogs">Safe foods</Link></li>
+                <li><Link href="/feeding">Feeding</Link></li>
                 <li><Link href="/#tools">Tools</Link></li>
                 <li><Link href="/gear">Kit</Link></li>
               </ul>
