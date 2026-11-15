@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/data/site";
-import { hubs } from "@/data/hubs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,12 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/" className="logo">{site.name}</Link>
             <nav aria-label="Main">
               <ul>
-                {hubs.map((h) => (
-                  <li key={h.slug}><Link href={`/behaviour/${h.slug}`}>{h.short}</Link></li>
-                ))}
                 <li><Link href="/safe-for-dogs">Safe foods</Link></li>
                 <li><Link href="/feeding">Feeding</Link></li>
                 <li><Link href="/#tools">Tools</Link></li>
+                <li><Link href="/behaviour">Behaviour</Link></li>
                 <li><Link href="/gear">Kit</Link></li>
               </ul>
             </nav>

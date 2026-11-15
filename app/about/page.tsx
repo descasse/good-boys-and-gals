@@ -13,15 +13,14 @@ export default function Page() {
     <div className="wrap article">
       <h1>About {site.name}</h1>
       <p className="lede">
-        We turn reputable advice on common dog behaviour problems into something you can act on
-        tonight.
+        Straight answers to everyday dog questions: what's safe to eat, what to feed, what things
+        cost and what helps. Every answer links to where it came from.
       </p>
 
       <h2>What we are, and are not</h2>
       <p>
-        We are not vets and we are not a dog training business. We read what the UK's animal
-        welfare charities and veterinary bodies publish, and put it into plain English with the
-        practical steps first.
+        We are not vets. We read what the UK's animal welfare charities, veterinary bodies and
+        the pet food trade body publish, and put it into plain English with the answer first.
       </p>
 
       <h2>Where the information comes from</h2>
